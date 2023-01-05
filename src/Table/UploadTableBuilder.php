@@ -58,21 +58,29 @@ class UploadTableBuilder extends TableBuilder
                     <br>
                     <small class="text-muted">{value.disk}://{value.folder}/{value.file}</small>
                     <br>
-                    <span>{value.size} {value.keywords}</span>',
+                    <span><span class="tag {value.size_tag_type} tag-sm">{value.readable_file_size}</span> <span class="tag tag-default tag-sm text-gray-dark">{value.mime_type}</span> {value.size} {value.keywords}</span>',
             'value'       => [
                 'file'     => 'entry.name',
+                'mime_type'     => 'entry.mime_type',
                 'folder'   => 'entry.folder.slug',
                 'keywords' => 'entry.keywords.labels|join',
                 'disk'     => 'entry.folder.disk.slug',
                 'size'     => 'entry.size_label',
+                'size_tag_type' => 'entry.size.value < 150000 ? "tag-info" : entry.size.value < 350000 ? "tag-warning" : "tag-danger"',
+                'readable_file_size' => 'entry.readable_size',
             ],
         ],
-        'size'          => [
-            'sort_column' => 'size',
-            'value'       => 'entry.readable_size',
-        ],
-        'mime_type',
         'folder',
+        'updated_at'          => [
+            'sort_column' => 'updated_at',
+            'wrapper'     => '{value.updated_at_human}
+                              <br>
+                              <small class="text-muted">{value.updated_at}</small>',
+            'value'       => [
+                'updated_at' => 'entry.updated_at.format("M jS, Y, H:i")',
+                'updated_at_human' => 'entry.updated_at.diffForHumans()'
+            ],
+        ],
     ];
 
     /**
